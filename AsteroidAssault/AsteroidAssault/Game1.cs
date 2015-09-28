@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 namespace AsteroidAssault
+    // Robert Foder
 {
     /// <summary>
     /// This is the main type for your game
@@ -18,6 +19,17 @@ namespace AsteroidAssault
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        
+       
+
+        // pg. 90
+        enum GameStates { TitleScreen, Playing, PlayerDead, GameOver };
+        //pg. 102
+        GameStates gameState = GameStates.Playing;
+        Texture2D titleScreen;
+        Texture2D spriteSheet;
+        //pg. 102
+        StarField starField;
 
         public Game1()
         {
@@ -48,6 +60,18 @@ namespace AsteroidAssault
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            //pg 90
+            titleScreen = Content.Load<Texture2D>(@"TitleScreen");
+            spriteSheet = Content.Load<Texture2D>(@"spriteSheet");
+
+           // pg. 103
+            starField = new StarField(
+                this.Window.ClientBounds.Width,
+                this.Window.ClientBounds.Height,
+                200,
+                new Vector2(0, 30f),
+                spriteSheet,
+                new Rectangle(0, 450, 2, 2));
         }
 
         /// <summary>
@@ -71,6 +95,48 @@ namespace AsteroidAssault
                 this.Exit();
 
             // TODO: Add your update logic here
+            // pg. 90
+            switch (gameState)
+            {
+                case GameStates.TitleScreen:
+                    break;
+
+                case GameStates.Playing:
+                    //pg. 103
+                    starField.Update(gameTime);
+                    
+                    break;
+
+                case GameStates.PlayerDead:
+                    break;
+
+                case GameStates.GameOver:
+                    break;
+            }
+            // pg 90
+            spriteBatch.Begin();
+
+            if (gameState == GameStates.TitleScreen)
+            {
+                spriteBatch.Draw(titleScreen,
+                    new Rectangle(0, 0, this.Window.ClientBounds.Width,
+                        this.Window.ClientBounds.Height),
+                        Color.White);
+            }
+
+            if ((gameState == GameStates.Playing) ||
+                (gameState == GameStates.PlayerDead) ||
+                (gameState == GameStates.GameOver))
+            {
+                //pg. 103
+                starField.Draw(spriteBatch);
+            }
+
+            if ((gameState == GameStates.GameOver))
+            {
+            }
+
+            spriteBatch.End();
 
             base.Update(gameTime);
         }
@@ -80,9 +146,10 @@ namespace AsteroidAssault
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+        { 
+            //pg. 103
+            GraphicsDevice.Clear(Color.Black);
+            
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
