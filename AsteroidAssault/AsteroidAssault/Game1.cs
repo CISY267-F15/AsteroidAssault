@@ -34,6 +34,8 @@ namespace AsteroidAssault
         AsteroidManager asteroidManager;
          //pg. 125
         PlayerManager playerManager;
+         //pg. 138
+        EnemyManager enemyManager;
 
         public Game1()
         {
@@ -94,6 +96,17 @@ namespace AsteroidAssault
                     0,
                     this.Window.ClientBounds.Width,
                     this.Window.ClientBounds.Height));
+            //pg. 138
+            enemyManager = new EnemyManager(
+                spriteSheet,
+                new Rectangle(0, 200, 50, 50),
+                6,
+                playerManager,
+                new Rectangle(
+                    0,
+                    0,
+                    this.Window.ClientBounds.Width,
+                    this.Window.ClientBounds.Height));
         }
 
         /// <summary>
@@ -130,6 +143,8 @@ namespace AsteroidAssault
                     asteroidManager.Update(gameTime);
                     //pg. 125
                     playerManager.Update(gameTime);
+                    //pg. 138
+                    enemyManager.Update(gameTime);
                     
                     break;
 
@@ -172,6 +187,8 @@ namespace AsteroidAssault
                 asteroidManager.Draw(spriteBatch);
                 //pg. 125
                 playerManager.Draw(spriteBatch);
+                //pg. 138
+                enemyManager.Draw(spriteBatch);
             }
 
             if ((gameState == GameStates.GameOver))
