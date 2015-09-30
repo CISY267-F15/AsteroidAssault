@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -15,7 +16,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class StarField : Microsoft.Xna.Framework.GameComponent
+    class StarField : Microsoft.Xna.Framework.Game
     {
         // pg. 101
         private List<Sprite> stars = new List<Sprite>();

@@ -1,0 +1,95 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
+
+namespace AsteroidAssault
+{
+    /// <summary>
+    /// This is a game component that implements IUpdateable.
+    /// </summary>
+    public class ShotManager : Microsoft.Xna.Framework.Game
+    {
+        //pg. 116
+        public List<Sprite> Shots = new List<Sprite>();
+        private Rectangle screenBounds;
+
+        private static Texture2D Texture;
+        private static Rectangle InitialFrame;
+        private static int FrameCount;
+        private float shotSpeed;
+        private static int CollisionRadius;
+
+        public ShotManager(
+            Texture2D texture,
+            Rectangle initialFrame,
+            int frameCount,
+            int collisionRadius,
+            float shotSpeed,
+            Rectangle screenBounds)
+        {
+            Texture = texture;
+            InitialFrame = initialFrame;
+            FrameCount = frameCount;
+            CollisionRadius = collisionRadius;
+            this.shotSpeed = shotSpeed;
+            this.screenBounds = screenBounds;
+        }
+        //pg. 117
+        public void FireShot(
+            Vector2 location,
+            Vector2 velocity,
+            bool playerFired)
+        {
+            Sprite thisShot = new Sprite(
+                location,
+                Texture,
+                InitialFrame,
+                velocity);
+
+            thisShot.Velocity *= shotSpeed;
+
+            for (int x = 1; x < FrameCount; x++)
+            {
+                thisShot.AddFrame(new Rectangle(
+                    InitialFrame.X + (InitialFrame.Width * x),
+                    InitialFrame.Y,
+                    InitialFrame.Width,
+                    InitialFrame.Height));
+            }
+            thisShot.CollisionRadius = CollisionRadius;
+            Shots.Add(thisShot);
+        }
+        //pg. 118
+        public void Update(GameTime gameTime)
+        {
+            for (int x = Shots.Count - 1; x >= 0; x--)
+            {
+                Shots[x].Update(gameTime);
+            if (!screenBounds.Intersects(Shots[x].Destination))
+            {
+                Shots.RemoveAt(x);
+            }
+        }
+    }
+        //pg. 118
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (Sprite shot in Shots)
+            {
+                shot.Draw(spriteBatch);
+            }
+        }
+
+
+    }
+}

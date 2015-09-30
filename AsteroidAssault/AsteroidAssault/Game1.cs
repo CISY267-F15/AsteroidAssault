@@ -15,7 +15,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+     class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -30,6 +30,8 @@ namespace AsteroidAssault
         Texture2D spriteSheet;
         //pg. 102
         StarField starField;
+         //pg. 110
+        AsteroidManager asteroidManager;
 
         public Game1()
         {
@@ -72,6 +74,14 @@ namespace AsteroidAssault
                 new Vector2(0, 30f),
                 spriteSheet,
                 new Rectangle(0, 450, 2, 2));
+            //pg. 110
+            asteroidManager = new AsteroidManager(
+                10,
+                spriteSheet,
+                new Rectangle(0, 0, 50, 50),
+                20,
+                this.Window.ClientBounds.Width,
+                this.Window.ClientBounds.Height);
         }
 
         /// <summary>
@@ -104,6 +114,8 @@ namespace AsteroidAssault
                 case GameStates.Playing:
                     //pg. 103
                     starField.Update(gameTime);
+                    //pg.111
+                    asteroidManager.Update(gameTime);
                     
                     break;
 
@@ -113,6 +125,18 @@ namespace AsteroidAssault
                 case GameStates.GameOver:
                     break;
             }
+           
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// This is called when the game should draw itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime gameTime)
+        { 
+            //pg. 103
+            GraphicsDevice.Clear(Color.Black);
             // pg 90
             spriteBatch.Begin();
 
@@ -130,6 +154,8 @@ namespace AsteroidAssault
             {
                 //pg. 103
                 starField.Draw(spriteBatch);
+                //pg. 111
+                asteroidManager.Draw(spriteBatch);
             }
 
             if ((gameState == GameStates.GameOver))
@@ -138,17 +164,6 @@ namespace AsteroidAssault
 
             spriteBatch.End();
 
-            base.Update(gameTime);
-        }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        { 
-            //pg. 103
-            GraphicsDevice.Clear(Color.Black);
             
             // TODO: Add your drawing code here
 

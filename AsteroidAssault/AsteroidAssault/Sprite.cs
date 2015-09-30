@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -15,7 +16,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Sprite : Microsoft.Xna.Framework.GameComponent
+    class Sprite : Microsoft.Xna.Framework.Game
     {
         // pg. 92
         public Texture2D Texture;
@@ -80,6 +81,7 @@ namespace AsteroidAssault
             set  { currentFrame = (int)MathHelper.Clamp(value, 0,
                     frames.Count - 1);  }
         }
+    
         public float FrameTime
         {
             get { return frameTime; }
@@ -154,6 +156,7 @@ namespace AsteroidAssault
             }
             location += (velocity * elapsed);
         }
+    
         // pg. 99
         public virtual void Draw(SpriteBatch spriteBatch)
         {
