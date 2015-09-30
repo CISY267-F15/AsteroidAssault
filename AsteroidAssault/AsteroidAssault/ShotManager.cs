@@ -16,7 +16,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class ShotManager : Microsoft.Xna.Framework.Game
+     class ShotManager : Microsoft.Xna.Framework.Game
     {
         //pg. 116
         public List<Sprite> Shots = new List<Sprite>();

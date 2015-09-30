@@ -16,7 +16,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class PlayerManager : Microsoft.Xna.Framework.Game
+    class PlayerManager : Microsoft.Xna.Framework.Game
     {
         //pg. 119
         public Sprite playerSprite;
@@ -45,6 +45,7 @@ namespace AsteroidAssault
                 texture,
                 initialFrame,
                 Vector2.Zero);
+
             PlayerShotManager = new ShotManager(
                 texture,
                 new Rectangle(0, 300, 5, 5),
@@ -122,6 +123,60 @@ namespace AsteroidAssault
                 FireShot();
             }
         }
+        private void imposeMovementLimits()
+        //pg. 123
+        {
+            Vector2 location = playerSprite.Location;
+
+            if (location.X < playerAreaLimit.X)
+                location.X = playerAreaLimit.X;
+
+            if (location.X >
+                (playerAreaLimit.Right - playerSprite.Source.Width))
+                location.X =
+                    (playerAreaLimit.Right - playerSprite.Source.Width);
+
+            if (location.Y < playerAreaLimit.Y)
+                location.Y = playerAreaLimit.Y;
+
+            if (location.Y >
+               (playerAreaLimit.Bottom - playerSprite.Source.Height))
+                location.Y =
+                    (playerAreaLimit.Bottom - playerSprite.Source.Height);
+
+            playerSprite.Location = location;
+        }
+        public void Update(GameTime gameTime)
+        {
+            PlayerShotManager.Update(gameTime);
+
+            if (!Destroyed)
+            {
+                playerSprite.Velocity = Vector2.Zero;
+
+                shotTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                HandleKeyboardInput(Keyboard.GetState());
+                HandleGamepadInput(GamePad.GetState(PlayerIndex.One));
+
+                playerSprite.Velocity.Normalize();
+                playerSprite.Velocity *= playerSpeed;
+
+                playerSprite.Update(gameTime);
+                imposeMovementLimits();
+            }
+        }
+        //pg. 124
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            PlayerShotManager.Draw(spriteBatch);
+
+            if (!Destroyed)
+            {
+                playerSprite.Draw(spriteBatch);
+            }
+        }
+
 
 
     }

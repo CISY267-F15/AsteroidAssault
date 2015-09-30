@@ -32,6 +32,8 @@ namespace AsteroidAssault
         StarField starField;
          //pg. 110
         AsteroidManager asteroidManager;
+         //pg. 125
+        PlayerManager playerManager;
 
         public Game1()
         {
@@ -82,6 +84,16 @@ namespace AsteroidAssault
                 20,
                 this.Window.ClientBounds.Width,
                 this.Window.ClientBounds.Height);
+            // pg. 125
+            playerManager = new PlayerManager(
+                spriteSheet,
+                new Rectangle(0, 150, 50, 50),
+                3,
+                new Rectangle(
+                    0,
+                    0,
+                    this.Window.ClientBounds.Width,
+                    this.Window.ClientBounds.Height));
         }
 
         /// <summary>
@@ -116,6 +128,8 @@ namespace AsteroidAssault
                     starField.Update(gameTime);
                     //pg.111
                     asteroidManager.Update(gameTime);
+                    //pg. 125
+                    playerManager.Update(gameTime);
                     
                     break;
 
@@ -156,6 +170,8 @@ namespace AsteroidAssault
                 starField.Draw(spriteBatch);
                 //pg. 111
                 asteroidManager.Draw(spriteBatch);
+                //pg. 125
+                playerManager.Draw(spriteBatch);
             }
 
             if ((gameState == GameStates.GameOver))
