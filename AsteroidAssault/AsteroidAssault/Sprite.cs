@@ -21,7 +21,7 @@ namespace AsteroidAssault
         private Color tintColor = Color.White;
         private float rotation = 0.0f;
 
-        public int CollosionRadius = 0;
+        public int CollisionRadius = 0;
         public int BoundingXPadding = 0;
         public int BoundingYPadding = 0;
 
@@ -47,6 +47,12 @@ namespace AsteroidAssault
         {
             get { return location; }
             set { location = value; }
+        }
+
+        public Vector2 Velocity
+        {
+            get { return velocity; }
+            set { velocity = value; }
         }
 
         public Color TintColor
@@ -130,7 +136,7 @@ namespace AsteroidAssault
                 return false;
         }
 
-        public void Addframe(Rectangle frameRectangle)
+        public void AddFrame(Rectangle frameRectangle)
         {
             frames.Add(frameRectangle);
         }
@@ -160,7 +166,7 @@ namespace AsteroidAssault
                 rotation,
                 new Vector2(frameWidth / 2, frameHeight / 2),
                 1.0f,
-                SpriteEffetcs.None,
+                SpriteEffects.None,
                 0.0f);
         }
     }
