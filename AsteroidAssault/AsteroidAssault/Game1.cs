@@ -18,6 +18,12 @@ namespace AsteroidAssault
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        enum GameStates { TitleScreen, Playing, PlayerDead, GameOver };
+        GameStates gameState = GameStates.Playing;
+        Texture2D titleScreen;
+        Texture2D spriteSheet;
+
+        StarField starField;
 
         public Game1()
         {
@@ -47,7 +53,16 @@ namespace AsteroidAssault
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
+            spriteSheet = Content.Load<Texture2D>(@"Textures\spriteSheet");
+
+            starField = new StarField(
+                this.Window.ClientBounds.Width,
+                this.Window.ClientBounds.Height,
+                200,
+                new Vector2(0, 30f),
+                spriteSheet,
+                new Rectangle(0, 450, 2, 2));
         }
 
         /// <summary>
@@ -70,7 +85,23 @@ namespace AsteroidAssault
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
+            switch (gameState)
+            {
+                case GameStates.TitleScreen:
+                    break;
+
+                case GameStates.Playing:
+                    {
+                        starField.Update(gameTime);
+                    }
+                    break;
+
+                case GameStates.PlayerDead:
+                    break;
+
+                case GameStates.GameOver:
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -81,9 +112,30 @@ namespace AsteroidAssault
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            if (gameState == GameStates.TitleScreen)
+            {
+                spriteBatch.Draw(titleScreen,
+                    new Rectangle(0, 0, this.Window.ClientBounds.Width,
+                        this.Window.ClientBounds.Height),
+                        Color.White);
+            }
+
+            if ((gameState == GameStates.Playing) ||
+                (gameState == GameStates.PlayerDead) ||
+                (gameState == GameStates.GameOver))
+            {
+                starField.Draw(spriteBatch);
+            }
+
+            if ((gameState == GameStates.GameOver))
+            {
+            }
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
