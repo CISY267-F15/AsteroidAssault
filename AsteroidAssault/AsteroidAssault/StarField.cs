@@ -16,7 +16,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    class StarField : Microsoft.Xna.Framework.Game
+    class StarField 
     {
         // pg. 101
         private List<Sprite> stars = new List<Sprite>();

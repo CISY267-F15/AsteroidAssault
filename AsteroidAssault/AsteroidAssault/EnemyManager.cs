@@ -16,7 +16,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-   class EnemyManager : Microsoft.Xna.Framework.Game
+    class EnemyManager 
     {
       //pg. 132
        private Texture2D texture;

@@ -16,7 +16,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    class Enemy : Microsoft.Xna.Framework.Game
+    class Enemy 
     {
         //pg. 127
         public Sprite EnemySprite;
@@ -102,6 +102,8 @@ namespace AsteroidAssault
                 heading *= speed;
                 EnemySprite.Velocity = heading;
                 previousLocation = EnemySprite.Location;
+                //pg. 130 
+                EnemySprite.Update(gameTime);
                 EnemySprite.Rotation =
                     (float)Math.Atan2(
                     EnemySprite.Location.Y - previousLocation.Y,

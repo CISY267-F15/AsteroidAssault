@@ -15,7 +15,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-     class Game1 : Microsoft.Xna.Framework.Game
+    class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -36,6 +36,8 @@ namespace AsteroidAssault
         PlayerManager playerManager;
          //pg. 138
         EnemyManager enemyManager;
+        //pg. 150 declarations
+        ExplosionManager explosionManager;
 
         public Game1()
         {
@@ -52,7 +54,7 @@ namespace AsteroidAssault
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            
             base.Initialize();
         }
 
@@ -96,6 +98,7 @@ namespace AsteroidAssault
                     0,
                     this.Window.ClientBounds.Width,
                     this.Window.ClientBounds.Height));
+        
             //pg. 138
             enemyManager = new EnemyManager(
                 spriteSheet,
@@ -105,8 +108,15 @@ namespace AsteroidAssault
                 new Rectangle(
                     0,
                     0,
-                    this.Window.ClientBounds.Width,
-                    this.Window.ClientBounds.Height));
+                this.Window.ClientBounds.Width,
+                this.Window.ClientBounds.Height));
+            //pg. 150 loadcontent
+            explosionManager = new ExplosionManager(
+                spriteSheet,
+                new Rectangle(0, 100, 50, 50),
+                3,
+                new Rectangle(0, 450, 2, 2));
+                    
         }
 
         /// <summary>
@@ -145,6 +155,8 @@ namespace AsteroidAssault
                     playerManager.Update(gameTime);
                     //pg. 138
                     enemyManager.Update(gameTime);
+                    //pg. 150 update
+                    explosionManager.Update(gameTime);
                     
                     break;
 
@@ -154,7 +166,7 @@ namespace AsteroidAssault
                 case GameStates.GameOver:
                     break;
             }
-           
+
             base.Update(gameTime);
         }
 
@@ -189,6 +201,8 @@ namespace AsteroidAssault
                 playerManager.Draw(spriteBatch);
                 //pg. 138
                 enemyManager.Draw(spriteBatch);
+                //pg. 150 draw
+                explosionManager.Draw(spriteBatch);
             }
 
             if ((gameState == GameStates.GameOver))

@@ -16,7 +16,7 @@ namespace AsteroidAssault
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    class Sprite : Microsoft.Xna.Framework.Game
+    class Sprite 
     {
         // pg. 92
         public Texture2D Texture;
