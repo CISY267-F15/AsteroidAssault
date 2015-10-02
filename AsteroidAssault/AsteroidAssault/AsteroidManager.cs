@@ -160,6 +160,19 @@ namespace AsteroidAssault
                     asteroid.Velocity = randomVelocity();
                 }
             }
+
+            for (int x = 0; x < Asteroids.Count; x++)
+            {
+                for (int y = x + 1; y < Asteroids.Count; y++)
+                {
+                    if (Asteroids[x].IsCircleColliding(
+                        Asteroids[y].Center,
+                        Asteroids[y].CollisionRadius))
+                    {
+                        BounceAsteroids(Asteroids[x], Asteroids[y]);
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -169,6 +182,31 @@ namespace AsteroidAssault
                 asteroid.Draw(spriteBatch);
             }
         }
+
+        public void BounceAsteroids(Sprite asteroid1, Sprite asteroid2)
+        {
+            {
+                Vector2 cOfMass = (asteroid1.Velocity +
+                    asteroid2.Velocity) / 2;
+
+                Vector2 normal1 = asteroid2.Center - asteroid1.Center;
+                normal1.Normalize();
+                Vector2 normal2 = asteroid1.Center - asteroid2.Center;
+                normal2.Normalize();
+
+                asteroid1.Velocity -= cOfMass;
+                asteroid1.Velocity =
+                    Vector2.Reflect(asteroid1.Velocity, normal1);
+                asteroid1.Velocity += cOfMass;
+
+                asteroid2.Velocity -= cOfMass;
+                asteroid2.Velocity =
+                    Vector2.Reflect(asteroid2.Velocity, normal2);
+
+                asteroid2.Velocity += cOfMass;
+            }
+        }
+                
 
     }
 }
