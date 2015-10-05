@@ -223,8 +223,10 @@ namespace AsteroidAssault
                     {
                         playerDeathTimer = 0f;
                         enemyManager.Active = false;
-                        playerManager.LivesRemaining--;
-                        if (playerManager.LivesRemaining < 0)
+                        playerManager.LivesRemaining--;                    
+                        if (playerManager.LivesRemaining < 1)
+                        //change livesremaining to 1 so that there are exactly 
+                        // 3 lives and not 4 with the added 0
                         {
                             gameState = GameStates.GameOver;
                         }
