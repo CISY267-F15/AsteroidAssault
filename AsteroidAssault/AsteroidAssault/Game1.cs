@@ -25,7 +25,7 @@ namespace AsteroidAssault
         // pg. 90
         enum GameStates { TitleScreen, Playing, PlayerDead, GameOver };
         //pg. 102
-        GameStates gameState = GameStates.Playing;
+        GameStates gameState = GameStates.TitleScreen; //pg. 162
         Texture2D titleScreen;
         Texture2D spriteSheet;
         //pg. 102
@@ -38,6 +38,22 @@ namespace AsteroidAssault
         EnemyManager enemyManager;
         //pg. 150 declarations
         ExplosionManager explosionManager;
+        //pg. 156
+        CollisionManager collisionManager;
+
+        //pg. 162
+        SpriteFont pericles14;
+
+        private float playerDeathDelayTime = 10f;
+        private float playerDeathTimer = 0f;
+        private float titleScreenTimer = 0f;
+        private float titleScreenDelayTime = 1f;
+
+        private int playerStartingLives = 3;
+        private Vector2 playerStartLocation = new Vector2(390, 550);
+        private Vector2 scoreLocation = new Vector2(20, 10);
+        private Vector2 livesLocation = new Vector2(20, 25);
+
 
         public Game1()
         {
@@ -116,6 +132,17 @@ namespace AsteroidAssault
                 new Rectangle(0, 100, 50, 50),
                 3,
                 new Rectangle(0, 450, 2, 2));
+            //pg. 156
+            collisionManager = new CollisionManager(
+                asteroidManager,
+                playerManager,
+                enemyManager,
+                explosionManager);
+            //pg. 160
+            SoundManager.Initialize(Content);
+
+            //pg. 162
+            pericles14 = Content.Load<SpriteFont>(@"Pericles14");
                     
         }
 
@@ -127,6 +154,22 @@ namespace AsteroidAssault
         {
             // TODO: Unload any non ContentManager content here
         }
+
+        //pg. 163
+        private void resetGame()
+        {
+            playerManager.playerSprite.Location = playerStartLocation;
+            foreach (Sprite asteroid in asteroidManager.Asteroids)
+            {
+                asteroid.Location = new Vector2(-500, -500);
+            }
+            enemyManager.Enemies.Clear();
+            enemyManager.Active = true;
+            playerManager.PlayerShotManager.Shots.Clear();
+            enemyManager.EnemyShotManager.Shots.Clear();
+            playerManager.Destroyed = false;
+        }
+
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -144,6 +187,22 @@ namespace AsteroidAssault
             switch (gameState)
             {
                 case GameStates.TitleScreen:
+                    //pg. 163
+                    titleScreenTimer +=
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (titleScreenTimer >= titleScreenDelayTime)
+                    {
+                        if ((Keyboard.GetState().IsKeyDown(Keys.Space)) ||
+                            (GamePad.GetState(PlayerIndex.One).Buttons.A ==
+                            ButtonState.Pressed))
+                        {
+                            playerManager.LivesRemaining = playerStartingLives;
+                            playerManager.PlayerScore = 0;
+                            resetGame();
+                            gameState = GameStates.Playing;
+                        }
+                    }
                     break;
 
                 case GameStates.Playing:
@@ -157,13 +216,57 @@ namespace AsteroidAssault
                     enemyManager.Update(gameTime);
                     //pg. 150 update
                     explosionManager.Update(gameTime);
+                    //pg. 156
+                    collisionManager.CheckCollisions();
+                    //pg. 163-64
+                    if (playerManager.Destroyed)
+                    {
+                        playerDeathTimer = 0f;
+                        enemyManager.Active = false;
+                        playerManager.LivesRemaining--;
+                        if (playerManager.LivesRemaining < 0)
+                        {
+                            gameState = GameStates.GameOver;
+                        }
+                        else
+                        {
+                            gameState = GameStates.PlayerDead;
+                        }
+                    }
                     
                     break;
 
                 case GameStates.PlayerDead:
+                    //pg. 164
+                    playerDeathTimer +=
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    starField.Update(gameTime);
+                    asteroidManager.Update(gameTime);
+                    enemyManager.Update(gameTime);
+                    playerManager.PlayerShotManager.Update(gameTime);
+                    explosionManager.Update(gameTime);
+
+                    if (playerDeathTimer >= playerDeathDelayTime)
+                    {
+                        resetGame();
+                        gameState = GameStates.Playing;
+                    }
                     break;
 
                 case GameStates.GameOver:
+                    //pg. 164-65
+                    playerDeathTimer +=
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    starField.Update(gameTime);
+                    asteroidManager.Update(gameTime);
+                    enemyManager.Update(gameTime);
+                    playerManager.PlayerShotManager.Update(gameTime);
+                    explosionManager.Update(gameTime);
+                    if (playerDeathTimer >= playerDeathDelayTime)
+                    {
+                        gameState = GameStates.TitleScreen;
+                    }
                     break;
             }
 
@@ -203,10 +306,37 @@ namespace AsteroidAssault
                 enemyManager.Draw(spriteBatch);
                 //pg. 150 draw
                 explosionManager.Draw(spriteBatch);
-            }
+            
 
-            if ((gameState == GameStates.GameOver))
+            //pg. 167
+            spriteBatch.DrawString(
+                pericles14,
+                "Score: " + playerManager.PlayerScore.ToString(),
+                scoreLocation,
+                Color.White);
+
+            if (playerManager.LivesRemaining >= 0)
             {
+                spriteBatch.DrawString(
+                    pericles14,
+                    "Ships Remaining: " +
+                    playerManager.LivesRemaining.ToString(),
+                    livesLocation,
+                    Color.White);
+            }
+        }
+        if ((gameState == GameStates.GameOver))
+    {
+        spriteBatch.DrawString(
+         pericles14,
+           "G A M E  O V E R !",
+           new Vector2(
+               this.Window.ClientBounds.Width / 2 -
+               pericles14.MeasureString
+               ("G A M E  O V E R !").X / 2,
+               50),
+               Color.White);
+
             }
 
             spriteBatch.End();

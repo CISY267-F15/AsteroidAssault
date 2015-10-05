@@ -67,6 +67,16 @@ namespace AsteroidAssault
             }
             thisShot.CollisionRadius = CollisionRadius;
             Shots.Add(thisShot);
+
+            //pg. 161
+            if (playerFired)
+            {
+                SoundManager.PlayPlayerShot();
+            }
+            else
+            {
+                SoundManager.PlayEnemyShot();
+            }
         }
         //pg. 118
         public void Update(GameTime gameTime)

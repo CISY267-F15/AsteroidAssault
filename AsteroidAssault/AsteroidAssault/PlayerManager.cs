@@ -23,7 +23,7 @@ namespace AsteroidAssault
         private float playerSpeed = 160.0f;
         private Rectangle playerAreaLimit;
 
-        public long Playerscore = 0;
+        public long PlayerScore = 0;
         public int LivesRemaining = 3;
         public bool Destroyed = false;
 
