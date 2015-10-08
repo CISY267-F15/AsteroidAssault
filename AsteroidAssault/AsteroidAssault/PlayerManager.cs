@@ -62,5 +62,103 @@ namespace AsteroidAssault
             }
             playerSprite.CollisionRadius = playerRadius;
         }
+
+        private void Fireshot()
+        {
+            if (shotTimer >= minShotTimer)
+            {
+                PlayerShotManager.FireShot(
+                    playerSprite.Location + gunOffset,
+                    new Vector2(0, -1),
+                    true);
+                shotTimer = 0.0f;
+            }
+        }
+
+        private void HandleKeyboardInput(KeyboardState keyState)
+        {
+            if (keyState.IsKeyDown(Keys.Up))
+            {
+                playerSprite.Velocity += new Vector2(0, -1);
+            }
+
+            if (keyState.IsKeyDown(Keys.Down))
+            {
+                playerSprite.Velocity += new Vector2(0, 1);
+            }
+
+            if (keyState.IsKeyDown(Keys.Left))
+            {
+                playerSprite.Velocity += new Vector2(-1, 0);
+            }
+
+            if (keyState.IsKeyDown(Keys.Right))
+            {
+                playerSprite.Velocity += new Vector2(1, 0);
+            }
+
+            if (keyState.IsKeyDown(Keys.Space))
+            {
+                Fireshot();
+            }
+        }
+        
+        private void HandleGamepadInput(GamePadState gamePadState)
+        {
+            playerSprite.Velocity +=
+                new Vector2(
+                    gamePadState.ThumbSticks.Left.X,
+                    -gamePadState.ThumbSticks.Left.Y);
+
+            if (gamePadState.Buttons.A == ButtonState.Pressed)
+            {
+                Fireshot();
+            }
+        }
+
+        private void imposeMovementLimits()
+        {
+            Vector2 location = playerSprite.Location;
+
+            if (location.X < playerAreaLimit.X)
+                location.X = playerAreaLimit.X;
+
+            if (location.X >
+                (playerAreaLimit.Right - playerSprite.Source.Width))
+                location.X =
+                    (playerAreaLimit.Right - playerSprite.Source.Width);
+
+            if (location.Y < playerAreaLimit.Y)
+                location.Y = playerAreaLimit.Y;
+
+            if (location.Y >
+                (playerAreaLimit.Bottom - playerSprite.Source.Height))
+                location.Y =
+                    (playerAreaLimit.Bottom - playerSprite.Source.Height);
+
+            playerSprite.Location = location;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            PlayerShotManager.Update(gameTime);
+
+            if (!Destroyed)
+            {
+                playerSprite.Velocity = Vector2.Zero;
+
+                shotTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                HandleKeyboardInput(Keyboard.GetState());
+                HandleGamepadInput(GamePad.GetState(PlayerIndex.One));
+
+                playerSprite.Velocity.Normalize();
+                playerSprite.Velocity *= playerSpeed;
+
+                playerSprite.Update(gameTime);
+                imposeMovementLimits();
+            }
+        }
+    
     }
 }
