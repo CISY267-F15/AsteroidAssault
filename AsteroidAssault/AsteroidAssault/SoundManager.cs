@@ -33,10 +33,12 @@ namespace AsteroidAssault
                         content.Load<SoundEffect>(@"Sounds\Explosion" +
                             x.ToString()));
                 }
+          
             }
             catch
             {
-                Debug.Write("SoundManager Initialization Failed");
+                Debug.Write("SoundManager Initialization Failed ; ");
+                
             }
         }
 
@@ -48,7 +50,7 @@ namespace AsteroidAssault
             }
             catch
             {
-                Debug.Write("PlayExplosion Failed");
+                Debug.Write("PlayExplosion Failed ; ");
             }
         }
 
@@ -60,7 +62,7 @@ namespace AsteroidAssault
             }
             catch
             {
-                Debug.Write("PlayPlayerShot Failed");
+                Debug.Write("PlayPlayerShot Failed ; ");
             }
         }
 
@@ -72,7 +74,7 @@ namespace AsteroidAssault
             }
             catch
             {
-                Debug.Write("PlayEnemyShot Failed");
+                Debug.Write("PlayEnemyShot Failed ; ");
             }
         }
 

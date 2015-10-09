@@ -127,7 +127,7 @@ namespace AsteroidAssault
 
             pericles14 = Content.Load<SpriteFont>(@"Pericles14");
 
-
+            SoundManager.Initialize(Content);
             // TODO: use this.Content to load your game content here
         }
 
