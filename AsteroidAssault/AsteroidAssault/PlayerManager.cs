@@ -159,6 +159,15 @@ namespace AsteroidAssault
                 imposeMovementLimits();
             }
         }
-    
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            PlayerShotManager.Draw(spriteBatch);
+
+            if (!Destroyed)
+            {
+                playerSprite.Draw(spriteBatch);
+            }
+        }    
     }
 }
