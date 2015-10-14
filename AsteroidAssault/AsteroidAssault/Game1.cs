@@ -38,7 +38,7 @@ namespace AsteroidAssault
         private float titleScreenDelayTime = 1f;
 
         private int playerStartingLives = 3;
-        private Vector2 playerStartLocatrion = new Vector2(390, 550);
+        private Vector2 playerStartLocation = new Vector2(390, 550);
         private Vector2 scoreLocation = new Vector2(20, 10);
         private Vector2 livesLocation = new Vector2(20, 25);
          
@@ -148,23 +148,77 @@ namespace AsteroidAssault
             switch (gameState)
             {
                 case GameStates.TitleScreen:
-                    break;
+                    titleScreenTimer +=
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        
+                    if (titleScreenTimer >= titleScreenDelayTime)
+	                {
+                        if ((Keyboard.GetState().IsKeyDown(Keys.Space)) ||
+		                    (GamePad.GetState(PlayerIndex.One).Buttons.A ==
+                            ButtonState.Pressed))
+		                {
+                            playerManager.LivesRemaining = playerStartingLives;
+                            playerManager.PlayerScore = 0;
+                            resetGame();
+                            gameState = GameStates.Playing;
+                        }
+                     }
+                     break;
 
                 case GameStates.Playing:
+                    starField.Update(gameTime);
+                    asteroidManager.Update(gameTime);
+                    playerManager.Update(gameTime);
+                    enemyManager.Update(gameTime);
+                    explosionManager.Update(gameTime);
+                    collisionManager.CheckCollisions();
+
+                    if (playerManager.Destroyed)
                     {
-                        starField.Update(gameTime);
-                        asteroidManager.Update(gameTime);
-                        playerManager.Update(gameTime);
-                        enemyManager.Update(gameTime);
-                        explosionManager.Update(gameTime);
-                        collisionManager.CheckCollisions();
+	                    playerDeathTimer = 0f;
+	                    enemyManager.Active = false;
+	                    playerManager.LivesRemaining--;
+	                    if (playerManager.LivesRemaining < 0)
+	                    {
+		                    gameState = GameStates.GameOver;
+	                    }
+	                    else
+	                    {
+		                    gameState = GameStates.PlayerDead;
+	                    }
                     }
                     break;
 
-                case GameStates.PlayerDead:
+                case  GameStates.PlayerDead:
+                    playerDeathTimer +=
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+	                starField.Update(gameTime);
+	                asteroidManager.Update(gameTime);
+	                enemyManager.Update(gameTime);
+	                playerManager.PlayerShotManager.Update(gameTime);
+                    explosionManager.Update(gameTime);
+ 
+                    if (playerDeathTimer >= playerDeathDelayTime)
+                    {
+	                    resetGame();
+	                    gameState = GameStates.Playing;
+                    }
                     break;
 
+
                 case GameStates.GameOver:
+                    playerDeathTimer +=
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    starField.Update(gameTime);
+	                asteroidManager.Update(gameTime);
+	                enemyManager.Update(gameTime);
+	                playerManager.PlayerShotManager.Update(gameTime);
+                    explosionManager.Update(gameTime);
+                    if (playerDeathTimer >= playerDeathDelayTime)
+                    {
+                        gameState = GameStates.TitleScreen;
+                    }
                     break;
             }
 
@@ -208,5 +262,20 @@ namespace AsteroidAssault
 
             base.Draw(gameTime);
         }
+
+        private void resetGame()
+        {
+            playerManager.playerSprite.Location = playerStartLocation;
+            foreach (Sprite asteroid in asteroidManager.Asteroids)
+            {
+                asteroid.Location = new Vector2(-500, -500);
+            }
+            enemyManager.Enemies.Clear();
+            enemyManager.Active = true;
+            playerManager.PlayerShotManager.Shots.Clear();
+            enemyManager.EnemyShotManager.Shots.Clear();
+            playerManager.Destroyed = false;
+        }
+
     }
 }

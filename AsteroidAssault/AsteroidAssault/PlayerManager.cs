@@ -15,7 +15,7 @@ namespace AsteroidAssault
         private Rectangle playerAreaLimit;
 
         public long PlayerScore = 0;
-        public Int16 LivesRemaining = 3;
+        public int LivesRemaining = 3;
         public bool Destroyed = false;
 
         private Vector2 gunOffset = new Vector2(25, 10);
