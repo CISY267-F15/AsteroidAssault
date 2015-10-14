@@ -33,7 +33,7 @@ namespace AsteroidAssault
         private Dictionary<int, int> waveSpawns = new Dictionary<int,
             int>();
 
-        public bool Active = true;
+        public bool Active = false;
 
         private Random rand = new Random();
 

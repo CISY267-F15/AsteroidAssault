@@ -19,7 +19,7 @@ namespace AsteroidAssault
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         enum GameStates { TitleScreen, Playing, PlayerDead, GameOver };
-        GameStates gameState = GameStates.Playing;
+        GameStates gameState = GameStates.TitleScreen;
         Texture2D titleScreen;
         Texture2D spriteSheet;
 
@@ -28,6 +28,19 @@ namespace AsteroidAssault
         PlayerManager playerManager;
         EnemyManager enemyManager;
         ExplosionManager explosionManager;
+        CollisionManager collisionManager;
+
+        SpriteFont pericles14;
+
+        private float playerDeathDelayTime = 10f;
+        private float playerDeathTimer = 0f;
+        private float titleScreenTimer = 0f;
+        private float titleScreenDelayTime = 1f;
+
+        private int playerStartingLives = 3;
+        private Vector2 playerStartLocatrion = new Vector2(390, 550);
+        private Vector2 scoreLocation = new Vector2(20, 10);
+        private Vector2 livesLocation = new Vector2(20, 25);
          
         public Game1()
         {
@@ -102,6 +115,14 @@ namespace AsteroidAssault
                 new Rectangle(0, 100, 50, 50),
                 3,
                 new Rectangle(0, 450, 2, 2));
+
+            collisionManager = new CollisionManager(
+                asteroidManager,
+                playerManager,
+                enemyManager,
+                explosionManager);
+
+            pericles14 = Content.Load<SpriteFont>(@"Fonts\Pericles14");
         }
 
         /// <summary>
@@ -136,6 +157,7 @@ namespace AsteroidAssault
                         playerManager.Update(gameTime);
                         enemyManager.Update(gameTime);
                         explosionManager.Update(gameTime);
+                        collisionManager.CheckCollisions();
                     }
                     break;
 
