@@ -100,6 +100,8 @@ namespace AsteroidAssault
                     initialColor,
                     finalColor));
             }
+
+            SoundManager.PlayExplosion();
         }
 
         public void Update(GameTime gameTime)

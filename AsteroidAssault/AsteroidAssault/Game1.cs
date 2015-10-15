@@ -123,6 +123,8 @@ namespace AsteroidAssault
                 explosionManager);
 
             pericles14 = Content.Load<SpriteFont>(@"Fonts\Pericles14");
+
+            SoundManager.Initialize(Content);
         }
 
         /// <summary>
@@ -252,10 +254,35 @@ namespace AsteroidAssault
                 playerManager.Draw(spriteBatch);
                 enemyManager.Draw(spriteBatch);
                 explosionManager.Draw(spriteBatch);
+
+                spriteBatch.DrawString(
+                    pericles14,
+                    "Score: " + playerManager.PlayerScore.ToString(),
+                    scoreLocation,
+                    Color.White);
+
+                if (playerManager.LivesRemaining >= 0)
+                {
+                    spriteBatch.DrawString(
+                        pericles14,
+                        "Ships Remaining: " +
+                            playerManager.LivesRemaining.ToString(),
+                        livesLocation,
+                        Color.White);
+                }
             }
 
             if ((gameState == GameStates.GameOver))
             {
+                spriteBatch.DrawString(
+                    pericles14,
+                    "G A M E  O V E R !",
+                    new Vector2(
+                        this.Window.ClientBounds.Width / 2 -
+                            pericles14.MeasureString
+                                ("G A M E  O V E R!").X / 2,
+                        50),
+                    Color.White);
             }
 
             spriteBatch.End();
